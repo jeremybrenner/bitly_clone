@@ -4,7 +4,10 @@ var bodyParser = require("body-parser");
 var path = require("path")
 //define ./views as a variable
 var views = path.join(process.cwd(), "views")
-var urlArr = [];
+var Rstring = require("randomstring")
+var random = {}
+
+
 
 //define app as express 'instance'
 var app = express();
@@ -17,17 +20,17 @@ app.get("/", function(req, res){
 	res.sendFile(homePath);
 });
 
-//gets the index as the index of requested params.
+//gets the index as the index of requested params
 app.get("/submit/:index", function(req, res){
-	var indexPath = urlArr[req.params.index]
+	var indexPath = random[req.params.index]
 	res.redirect(indexPath);
 })
 
 app.post("/submit", function(req, res){
 	var urlObj= req.body.redirect.url;
-	urlArr.push(urlObj);
-	var index = urlArr.length-1
-	res.send("View your URL at localhost:3000/submit/" + index)
+	var secure = Rstring.generate()
+	random[secure] = urlObj
+	res.send("View your URL at localhost:3000/submit/" + secure)
 });
 
 //creates the server on port 3000
